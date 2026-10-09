@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHAT DO JOGO</title><style>
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;overflow:hidden}
+body{font-family:"Trebuchet MS",Verdana,sans-serif;color:#2A3081;background:#F4F5FB;display:flex;flex-direction:column;user-select:none}
+header{background:#2A3081;color:#fff;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+header h1{font-size:24px;letter-spacing:1px}.chip{font-size:19px;font-weight:bold;border-radius:12px;padding:7px 14px;white-space:nowrap}
+#cM{background:#fff;color:#2A3081;margin-left:auto}#cE{background:#FFD900;color:#2A3081}
+#palco{flex:1;display:flex;gap:2vw;padding:2vh 2vw;min-height:0}
+#pista{width:30%;background:#2B8A3E;border-radius:20px;padding:2vh 1.4vw;display:flex;flex-direction:column;gap:1.4vh;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+#pista h2{font-size:clamp(18px,3vh,26px);text-align:center;letter-spacing:1px}
+.raia{flex:1;background:#69DB7C;border-radius:12px;position:relative;border-right:10px dashed #fff;min-height:0}
+.raia .bicho{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:clamp(28px,6vh,52px);transition:left 1s ease}
+.raia .nome{position:absolute;left:8px;bottom:4px;font-size:clamp(11px,1.7vh,14px);font-weight:bold;color:#1B4332}
+.raia.eu{background:#FFD43B}.raia.eu .nome{color:#5C3D00}
+#chat{flex:1;display:flex;flex-direction:column;gap:1.4vh;min-width:0}
+#msgs{flex:1;background:#fff;border-radius:20px;padding:1.6vh 1.4vw;display:flex;flex-direction:column;justify-content:flex-end;gap:1.1vh;overflow:hidden;box-shadow:0 6px 18px rgba(42,48,129,.12);min-height:0}
+.m{display:flex;gap:12px;align-items:flex-start;opacity:.45}
+.m.atual{opacity:1}
+.m .av{font-size:clamp(28px,5.5vh,48px);line-height:1;flex-shrink:0}
+.m .bal{background:#EDF2FF;border-radius:16px;padding:.9vh 16px;font-size:clamp(17px,3vh,27px);font-weight:bold;line-height:1.25}
+.m.atual .bal{font-size:clamp(20px,3.6vh,32px);border:3px solid #748FFC}
+.m.sys .bal{background:#FFF3BF;border-color:#FAB005}
+.m .nick{display:block;font-size:.62em;color:#5C7CFA;letter-spacing:.5px}
+.m.sys .nick{color:#E67700}
+.m .feito{display:block;font-size:.6em;color:#2F9E44;margin-top:3px}
+#perg{font-size:clamp(17px,2.8vh,24px);font-weight:bold;text-align:center}
+#ops{display:flex;flex-direction:column;gap:1.1vh}
+.op{font:inherit;font-weight:bold;font-size:clamp(18px,3.1vh,27px);text-align:left;padding:1.3vh 20px;border-radius:16px;border:3px solid #2A3081;background:#fff;color:#2A3081;cursor:pointer;transition:transform .12s}
+.op:hover{transform:scale(1.02);background:#EDF2FF}
+.op.off,.op.off:hover{opacity:.28;transform:none;cursor:not-allowed;text-decoration:line-through}
+#aviso{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);font-size:24px;font-weight:bold;padding:12px 26px;border-radius:14px;display:none;background:#E8590C;color:#fff;z-index:40;box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:90vw;text-align:center}
+#festa{position:fixed;inset:0;background:rgba(244,245,251,.97);display:none;flex-direction:column;align-items:center;gap:1.8vh;text-align:center;padding:3vh 20px;overflow-y:auto;z-index:20}
+#festa>:first-child{margin-top:auto}#festa>:last-child{margin-bottom:auto}
+#festa .tit{font-size:clamp(30px,5.8vh,50px);font-weight:bold}#festa .sub{font-size:clamp(19px,3.3vh,28px);color:#333;max-width:860px;line-height:1.4}
+#festa .ganho{font-size:clamp(20px,3.2vh,28px);font-weight:bold;color:#E67700}
+#festa .regras{display:flex;flex-direction:column;gap:1vh;text-align:left;max-width:860px}
+#festa .regras div{font-size:clamp(18px,3vh,26px);font-weight:bold;background:#fff;border-radius:14px;padding:1vh 20px}
+#festa button{font:inherit;font-size:26px;font-weight:bold;padding:1.6vh 34px;border:none;border-radius:14px;background:#2F9E44;color:#fff;cursor:pointer}
+.emoG{font-size:clamp(60px,12vh,110px);line-height:1}
+</style></head><body>
+<header><h1>🎮 CHAT DO JOGO</h1><div class="chip" id="cM">—</div><div class="chip" id="cE">⭐ 0</div></header>
+<div id="palco">
+ <div id="pista"><h2>🏁 CORRIDA DOS BICHOS</h2>
+  <div class="raia"><span class="bicho" style="left:30%">🐢</span><span class="nome">PandaFeliz</span></div>
+  <div class="raia eu"><span class="bicho" id="eu" style="left:12%">🦊</span><span class="nome">VOCÊ · Foguete10</span></div>
+  <div class="raia"><span class="bicho" style="left:42%">🐇</span><span class="nome">Raio123</span></div>
+ </div>
+ <div id="chat"><div id="msgs"></div><div id="perg">O que você faz?</div><div id="ops"></div></div>
+</div><div id="aviso"></div><div id="festa"></div>
+<script>(function(){var $=function(i){return document.getElementById(i)};
+var S=[
+ {nick:'PandaFeliz',av:'🐼',msg:'Boa partida! Vamos jogar de novo?',o:[['😊 "Bora! Boa partida pra você também!"',1],['😠 "Sai daqui, você é chato!"',0]],t:'Gentileza também vale no jogo!',x:'Do outro lado da tela tem uma pessoa de verdade. Ser gentil no chat é igual a ser gentil no recreio.',f:'você respondeu com gentileza'},
+ {nick:'Raio123',av:'⚡',msg:'Qual é o nome da sua escola?',o:[['✋ Não conto. Isso fica guardado.',1],['🏫 Conto o nome da escola.',0]],t:'Isso fica guardado!',x:'Nome da escola, endereço e telefone são dados pessoais. No jogo, a gente não conta para quem não conhece.',f:'você não contou'},
+ {nick:'Estrela_10',av:'⭐',msg:'Qual é o seu nome no jogo?',o:[['🦊 Falo o meu apelido do jogo: Foguete10.',1],['📝 Falo o meu nome completo e a minha idade.',0]],t:'Apelido pode!',x:'No jogo a gente usa um apelido. O nome completo e a idade ficam guardados.',f:'você falou só o apelido'},
+ {nick:'MOEDAS_GRATIS',av:'💰',msg:'Quer 1000 moedas grátis? Clique neste link!',o:[['🚫 Não clico e chamo um adulto.',1],['👉 Clico rapidinho.',0]],t:'Não clicou. Muito bem!',x:'Prêmio fácil demais é armadilha. Um link estranho pode roubar a sua conta ou estragar o aparelho.',f:'você não clicou'},
+ {nick:'Trovao_X',av:'🌩️',msg:'Você joga muito mal, perdedor!',o:[['🛑 Não respondo, bloqueio e conto para um adulto.',1],['😡 Xingo de volta.',0]],t:'Bloquear e contar resolve!',x:'Xingar de volta só deixa a briga maior. Quem bloqueia e conta para um adulto fica no controle.',f:'você bloqueou e contou'},
+ {nick:'Jogador_777',av:'🎁',msg:'Me fala a sua senha que eu te dou um item raro.',o:[['🔒 Não falo. Senha é segredo.',1],['🔑 Falo a senha para ganhar o item.',0]],t:'Senha é segredo!',x:'A senha é só sua e da sua família. Quem pede senha quer entrar na sua conta.',f:'você guardou a senha'},
+ {nick:'Desconhecido_09',av:'❓',msg:'Manda uma foto sua?',o:[['📵 Não mando e conto para um adulto.',1],['📸 Mando uma foto.',0]],t:'Foto fica guardada!',x:'A nossa foto também é um dado pessoal. Se alguém pedir foto no jogo, conte para um adulto na hora.',f:'você não mandou e contou'},
+ {nick:'Desconhecido_09',av:'❓',msg:'Não conta pra ninguém que a gente conversa, tá?',o:[['🗣️ Conto para um adulto de confiança.',1],['🤐 Guardo o segredo.',0]],t:'Segredo assim não se guarda!',x:'Quem pede para esconder uma conversa está fazendo algo errado. Conte para um adulto de confiança.',f:'você contou para um adulto'},
+ {sys:1,nick:'AVISO',av:'💬',msg:'No chat, vários jogadores estão xingando um colega da sua turma.',o:[['🤝 Não xingo junto e aviso um adulto.',1],['😂 Xingo junto para fazer parte.',0],['🙈 Finjo que não vi.',0]],t:'Você ajudou o colega!',x:'Quem vê alguém sendo maltratado e avisa um adulto está protegendo. Fingir que não viu deixa o colega sozinho.',f:'você avisou um adulto'},
+ {sys:1,nick:'AVISO',av:'⏰',msg:'Você está jogando faz muito tempo. Chamaram para jantar.',o:[['🍽️ Salvo o jogo e vou jantar.',1],['🎮 Só mais uma partida... e mais uma...',0]],t:'Hora de parar!',x:'O jogo espera você voltar. Saber a hora de parar também é jogar com segurança.',f:'você parou na hora certa'}
+],i=0,est=0,tent=0;
+function emb(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),t=a[k];a[k]=a[j];a[j]=t;}return a;}
+function aviso(t){var a=$('aviso');a.textContent=t;a.style.display='block';clearTimeout(a._t);a._t=setTimeout(function(){a.style.display='none';},1800);}
+function festa(html,bt,fn){var f=$('festa');$('aviso').style.display='none';f.innerHTML=html+'<button id="btF">'+bt+'</button>';f.style.display='flex';$('btF').onclick=function(){f.style.display='none';fn();};}
+function bolha(s,atual,feito){return '<div class="m'+(s.sys?' sys':'')+(atual?' atual':'')+'"><span class="av">'+s.av+'</span><div class="bal"><span class="nick">'+s.nick+'</span>'+s.msg+(feito?'<span class="feito">✔ '+feito+'</span>':'')+'</div></div>';}
+function monta(){tent=0;var s=S[i];$('cM').textContent='Mensagem '+(i+1)+' de '+S.length;
+ var h='';for(var k=Math.max(0,i-2);k<i;k++)h+=bolha(S[k],0,S[k].f);h+=bolha(s,1);$('msgs').innerHTML=h;
+ $('perg').textContent=s.sys?'O que você faz?':s.nick+' mandou. O que você faz?';
+ $('ops').innerHTML='';emb(s.o).forEach(function(o){var b=document.createElement('button');b.className='op';b.textContent=o[0];b._ok=o[1];b.onclick=function(){resp(b);};$('ops').appendChild(b);});
+ $('eu').style.left=(12+76*i/S.length)+'%';}
+function resp(b){if(b.disabled)return;var s=S[i];
+ if(b._ok){var g=tent===0?2:1;est+=g;$('cE').textContent='⭐ '+est;var ult=i===S.length-1;
+  festa('<div class="tit">'+s.t+'</div><div class="sub">'+s.x+'</div><div class="ganho">+'+g+' ⭐'+(g===2?' de primeira!':'')+'</div>',ult?'CHEGAR NA LINHA DE CHEGADA 🏁':'PRÓXIMA MENSAGEM →',function(){if(ult)fim();else{i++;monta();}});}
+ else{tent++;b.disabled=true;b.classList.add('off');aviso('Pense de novo: isso deixa você seguro?');}}
+function fim(){$('eu').style.left='88%';
+ festa('<div class="emoG">🛡️</div><div class="tit">Jogador seguro!</div><div class="sub">Você chegou na linha de chegada com <b>'+est+'</b> estrelas de '+(S.length*2)+'.</div><div class="regras"><div>🔒 Meus dados são segredo: nome completo, escola, senha e foto.</div><div>🙋 Estranho pediu alguma coisa? Chamo um adulto.</div><div>😊 Gentileza também no chat.</div></div>','JOGAR DE NOVO',function(){i=0;est=0;$('cE').textContent='⭐ 0';monta();});}
+window.__t={S:S,get i(){return i},get est(){return est}};monta();})();</script></body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F4F1FF">
+<title>Chat do Jogo</title>
+<meta name="description" content="Jogo educativo de segurança digital para crianças: num chat de jogo online, decida o que fazer quando alguém pede dados, manda link, pede foto ou xinga. Apelido, dados pessoais, golpes, senha, estranhos, bullying e tempo de tela.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fontes/fredoka-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fontes/nunito-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<div class="fundo" aria-hidden="true"></div>
+
+<header class="barra">
+  <button class="marca" id="btInicio" aria-label="Ir para as salas do jogo"><span class="pixel-mini" aria-hidden="true"></span><span><b>Chat do Jogo</b><small>Segurança no jogo online</small></span></button>
+  <button class="bt-barra" id="btMapa"><span>Salas</span></button>
+  <button class="bt-barra" id="btAjustes" aria-label="Ajustes"><span>Ajustes</span></button>
+</header>
+
+<main>
+  <section class="tela" id="mapa"></section>
+
+  <section class="tela oculto" id="jogo">
+    <div class="jogo-topo">
+      <button class="bt-voltar" id="btVoltar">Salas</button>
+      <div class="chip" id="chipSala"></div>
+      <div class="previa" id="previa" aria-hidden="true"></div>
+      <button class="bt-redondo" id="btOuvir" aria-label="Ouvir a mensagem"></button>
+    </div>
+    <div class="palco" id="palco"></div>
+  </section>
+
+  <section class="tela oculto" id="ajustes"></section>
+</main>
+
+<div class="veu oculto" id="janela" role="dialog" aria-modal="true"></div>
+<div class="veu oculto" id="premio" role="dialog" aria-modal="true"></div>
+
+<script src="icones.js"></script>
+<script src="jogo.js"></script>
+</body>
+</html>
